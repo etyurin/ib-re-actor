@@ -184,6 +184,7 @@ create instances, we will only map from objects to clojure maps."
   [:order-id m_orderId]
   [:client-id m_clientId]
   [:permanent-id m_permId]
+  [:parent-id m_parentId]
   [:transmit? m_transmit]
   [:quantity m_totalQuantity]
   [:action m_action :translation :order-action]
