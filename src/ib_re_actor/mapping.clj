@@ -198,6 +198,7 @@ create instances, we will only map from objects to clojure maps."
   [:hidden? m_hidden]
   [:all-or-none? m_allOrNone]
   [:limit-price m_lmtPrice]
+  [:aux-price m_auxPrice]
   [:discretionary-amount m_discretionaryAmt]
   [:stop-price m_auxPrice])
 
