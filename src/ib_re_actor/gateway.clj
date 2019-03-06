@@ -246,6 +246,23 @@
   (unsubscribe! connection ticker-id))
 
 
+(defn request-market-depth
+  "Returns the ticker-id that can be used to cancel the request."
+  ([connection contract rows handlers with-mm-info?]
+   (let [ticker-id (next-id connection)
+         info-type (if with-mm-info? :update-market-depth-level-2 :update-market-depth)]
+     (subscribe! connection ticker-id
+                 (multiple-messages-handler connection info-type ticker-id handlers))
+     (cs/request-market-depth (:ecs connection)
+                              ticker-id contract rows)
+     ticker-id)))
+
+
+(defn cancel-market-depth [connection ticker-id]
+  (cs/cancel-market-depth (:ecs connection) ticker-id)
+  (unsubscribe! connection ticker-id))
+
+
 (defn calculate-implied-vol
   "Returns the ticker-id that can be used to cancel the request."
   [connection contract option-price underlying-price handlers]
