@@ -828,18 +828,25 @@ to check if if a given value is valid (known)."
   (str/split s #";"))
 
 (defn- th-components [s]
-  (str/split s #":"))
+  (str/split s #"-"))
 
 ;; NB: Closed days are represented as 0 length intervals on that day.
-(defn- th-intervals [[day s]]
-  (if (= s "CLOSED")
-    [[(str day "0000") (str day "0000")]]
-    (map #(mapv (partial str day) (str/split % #"-")) (str/split s #","))))
+(defn- th-intervals
+  "Normally we have time intervals as follows:
+    ([\"20190307:0830\" \"20190307:1515\"]
+      [\"20190307:1530\" \"20190307:1600\"]
+      [\"20190308:0830\" \"20190308:1515\"]
+      [\"20190308:1530\" \"20190308:1600\"])
+  Sometimes we might need to do with exchange closings... "
+  [[time1 time2]]
+  (if (= time2 "CLOSED")
+    [(str time1 ":0000") (str time1 ":0000")]
+    [time1 time2]))
 
 ;; Convert to Joda intervals
 (defn- joda-interval [tz [start end]]
-  (let [start-dt  (to-utc tz (tf/parse (tf/formatter "yyyyMMddHHmm") start))
-        end-dt    (to-utc tz (tf/parse (tf/formatter "yyyyMMddHHmm") end))
+  (let [start-dt  (to-utc tz (tf/parse (tf/formatter "yyyyMMdd:HHmm") start))
+        end-dt    (to-utc tz (tf/parse (tf/formatter "yyyyMMdd:HHmm") end))
         mod-start (if (time/after? start-dt end-dt)
                     (time/minus start-dt (time/days 1))
                     start-dt)]
@@ -851,7 +858,7 @@ to check if if a given value is valid (known)."
   (some->> t-string
        th-days
        (map th-components)
-       (mapcat th-intervals)
+       (map th-intervals)
        (map (partial joda-interval tz))))
 
 (defmethod translate [:from-ib :security-id-list] [_ _ tag-values]
