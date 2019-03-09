@@ -836,11 +836,13 @@ to check if if a given value is valid (known)."
     ([\"20190307:0830\" \"20190307:1515\"]
       [\"20190307:1530\" \"20190307:1600\"]
       [\"20190308:0830\" \"20190308:1515\"]
-      [\"20190308:1530\" \"20190308:1600\"])
-  Sometimes we might need to do with exchange closings... "
+      [\"20190308:1530\" \"20190308:1600\"]
+      [\"20190309:CLOSED\"])
+  Sometimes we might need to do with exchange closings... Then time2 becomes nil"
   [[time1 time2]]
-  (if (= time2 "CLOSED")
-    [(str time1 ":0000") (str time1 ":0000")]
+  (if (nil? time2)
+    (let [[date1 _] (str/split time1 #":")] ; discarded argument better be "CLOSED"...
+      [(str date1 ":0000") (str date1 ":0000")])
     [time1 time2]))
 
 ;; Convert to Joda intervals
