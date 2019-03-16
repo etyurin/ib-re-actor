@@ -10,7 +10,8 @@ date strings into clj-time dates, etc."
    [clojure.string :refer [join]]
    [ib-re-actor.translation :refer [translate]])
   (:import
-   (com.ib.client Contract)))
+   (java.util Vector)
+   (com.ib.client Contract ComboLeg)))
 
 (defprotocol Mappable
   (->map [this]
@@ -29,6 +30,9 @@ otherwise, don't and return m unchanged."
 (defn- assoc-nested [m k v]
   (if (nil? v) m (assoc m k (->map v))))
 
+(defn- assoc-collection [m k v]
+  (if (nil? v) m (assoc m k (map ->map v))))
+
 (defn emit-map<-field
   "When mapping from an object to a clojure map, this creates a call to assoc in the value.
 optional parameters:
@@ -38,20 +42,26 @@ optional parameters:
 setter or assoc when mapping to and from objects.
 
    :nested <<type>>:
-      Specifying this will map a nested instance of another class."
+      Specifying this will map a nested instance of another class.
+
+   :collection-of <<type>>:
+      Specifying this will map a collection of instances of another class.
+
+  "
   [this [k field & options]]
-  (let [{:keys [translation nested]} (apply hash-map options)
+  (let [{:keys [translation nested collection-of]} (apply hash-map options)
         m (gensym "m")]
     (cond
      (not (nil? translation)) `((assoc-if-val-non-nil ~k (. ~this ~field) ~translation))
      (not (nil? nested)) `((assoc-nested ~k (. ~this ~field)))
+     (not (nil? collection-of)) `((assoc-collection ~k (. ~this ~field)))
      :else `((assoc-if-val-non-nil ~k (. ~this ~field))))))
 
 (defn emit-map->field
   "When mapping from a clojure map to an object, this creates a call to set the associated
 field on the object."
   [m this [key field & options]]
-  (let [{:keys [translation nested]} (apply hash-map options)
+  (let [{:keys [translation nested collection-of]} (apply hash-map options)
         val (gensym "val")]
     `((if (contains? ~m ~key)
           (let [~val (~key ~m)]
@@ -60,6 +70,9 @@ field on the object."
                     ~(cond
                        (not (nil? translation)) `(translate :to-ib ~translation ~val)
                        (not (nil? nested)) `(map-> ~nested ~val)
+                       (not (nil? collection-of)) `(new
+                                                    java.util.Vector
+                                                    (mapv #(map-> ~collection-of %) ~val))
                        :else `~val))
               (catch ClassCastException ex#
                 (throw (ex-info (str "Failed to map field " ~(str field)
@@ -118,8 +131,18 @@ create instances, we will only map from objects to clojure maps."
   [:security-id-type m_secIdType :translation :security-id-type]
   [:security-id m_secId]
   [:combo-legs-description m_comboLegsDescrip]
-  [:combo-legs m_comboLegs]
+  [:combo-legs m_comboLegs :collection-of com.ib.client.ComboLeg]
   [:underlying-component m_underComp])
+
+(defmapping com.ib.client.ComboLeg
+  [:contract-id m_conId]
+  [:ratio m_ratio]
+  [:action m_action :translation :order-action]
+  [:exchange m_exchange]
+  [:open-close m_openClose] ; = 0 // Same
+  [:short-sale-slot m_shortSaleSlot] ; 1 = clearing broker, 2 = 3rd party
+  [:designated-location m_designatedLocation] ; when :short-sale-slot = 2
+  [:exempt-code m_exemptCode])
 
 (defmapping com.ib.client.ContractDetails
   [:summary m_summary :nested com.ib.client.Contract]
