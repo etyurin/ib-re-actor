@@ -332,6 +332,76 @@ to check if if a given value is valid (known)."
                     :inventory 256                       ;
                     :fundamental-ratios 258              ; :fundamental-ratios
                     :realtime-historical-volatility 411  ; 58?
+
+                    ;; Below are additional tick types that are supposedly allowed for :future-option
+                    ;; I gathered them from an error message
+                    ;:option-volume	100		; 	Option Volume
+                    ;:option-open-interest	101		; 	Option Open Interest
+                    :average-opt-volume	105		; 	Average Opt Volume
+                    ;:impvolat	106		; 	impvolat
+                    :climpvlt	107		; 	climpvlt
+                    :bond-analytic-data	125		; 	Bond analytic data
+                    ;:misc-stats	165		; 	Misc. Stats
+                    :cscreen	166		; 	CScreen
+                    ;:creditman-mark-price	221/220		; 	Creditman Mark Price
+                    ;:auction	225		; 	Auction
+                    :pl-price	232/221		; 	Pl Price
+                    ;:rtvolume	233		; 	RTVolume
+                    ;:inventory	236		; 	inventory
+                    ;:fundamentals	258/47		; 	Fundamentals
+                    :ivclose	291		; 	ivclose
+                    :wide-news	292		; 	Wide_news
+                    :tradecount	293		; 	TradeCount
+                    :traderate	294		; 	TradeRate
+                    :volumerate	295		; 	VolumeRate
+                    :lastrthtrade	318		; 	LastRTHTrade
+                    :participation-monitor	370		; 	ParticipationMonitor
+                    :rttrdvolume	375		; 	RTTrdVolume
+                    :cttticktag	377		; 	CttTickTag
+                    :ib-rate	381		; 	IB Rate
+                    :rfqtickresptag	384		; 	RfqTickRespTag
+                    :dmm	387		; 	DMM
+                    :issuer-fundamentals	388		; 	Issuer Fundamentals
+                    :ib-warrant-impvol-competetick	391		; 	IBWarrantImpVolCompeteTick
+                    :futures-margins	407		; 	FuturesMargins
+                    ;:rthistvol	411		; 	rthistvol
+                    :monitor-tick-tag	439		; 	MonitorTickTag
+                    :ibdividends	456/59		; 	IBDividends
+                    :rtclose	459		; 	RTCLOSE
+                    :bond-factor-multiplier	460		; 	Bond Factor Multiplier
+                    :fee-and-rebate-rate	499		; 	Fee and Rebate Rate
+                    :hvolrt10	511		; 	hvolrt10 (per-underlying)
+                    :hvolrt30	512		; 	hvolrt30 (per-underlying)
+                    :hvolrt50	513		; 	hvolrt50 (per-underlying)
+                    :hvolrt75	514		; 	hvolrt75 (per-underlying)
+                    :hvolrt100	515		; 	hvolrt100 (per-underlying)
+                    :hvolrt150	516		; 	hvolrt150 (per-underlying)
+                    :hvolrt200	517		; 	hvolrt200 (per-underlying)
+                    :fzmidptiv	521		; 	fzmidptiv
+                    :vsiv	545		; 	vsiv
+                    :etfnavbidask	576		; 	EtfNavBidAsk(navbidask)
+                    :etfnavlast	577		; 	EtfNavLast(navlast)
+                    :etfnavclose	578		; 	EtfNavClose(navclose)
+                    :average-opening-vol	584		; 	Average Opening Vol.
+                    :average-closing-vol	585		; 	Average Closing Vol.
+                    :pl-price-delayed	587		; 	Pl Price Delayed
+                    :futures-open-interest	588		; 	Futures Open Interest
+                    :short-term-volume-x-mins	595		; 	Short-Term Volume X Mins
+                    :ema-n	608		; 	EMA N
+                    :etfnavmisc	614		; 	EtfNavMisc(hight/low)
+                    :creditman-slow-mark-price	619		; 	Creditman Slow Mark Price
+                    :etffrozennavlast	623		; 	EtfFrozenNavLast(fznavlast)
+                    :monetary-close-price	645/428		; 	Monetary Close Price
+                    :avgv1min	658		; 	avgv1min
+                    :ivrank	661		; 	ivrank
+                    :ivpercntl	662		; 	ivpercntl
+                    :ivhilo	663		; 	ivhilo
+                    :hvrank	664		; 	hvrank
+                    :hvpercntl	665		; 	hvpercntl
+                    :hvhilo	666		; 	hvhilo
+                    :historical-ratios	669		; 	historical ratios
+                    :mpmidptiv	674		; 	mpmidptiv
+
                     })
 
 (translation-table log-level
