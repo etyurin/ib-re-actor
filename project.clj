@@ -1,4 +1,4 @@
-(defproject ib-re-actor "0.2.0-SNAPSHOT"
+(defproject ib-re-actor "0.2.1-SNAPSHOT"
   :description "Clojure friendly wrapper for InteractiveBrokers java API"
   :dependencies [[org.clojure/clojure "1.10.0"]
                  [clj-time "0.15.1"]
