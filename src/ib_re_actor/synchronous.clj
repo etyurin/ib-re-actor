@@ -75,9 +75,9 @@
 (defn option-price
   "Returns detailed information about an option contract based on its volatility
   including implied volatility, greeks, etc."
-  [connection contract option-price underlying-price]
+  [connection contract volatility underlying-price]
   (let [result (promise)]
-    (g/calculate-option-price connection contract option-price underlying-price
+    (g/calculate-option-price connection contract volatility underlying-price
                               (single-value-handlers result))
     @result))
 
