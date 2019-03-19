@@ -679,7 +679,9 @@ to check if if a given value is valid (known)."
 
 (translation-table market-data-type
                    {:real-time-streaming 1
-                    :frozen 2})
+                    :frozen 2
+                    :delayed 3
+                    :delayed-frozen 4})
 
 (translation-table boolean-int
                    {true 1
