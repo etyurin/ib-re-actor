@@ -14,7 +14,7 @@
    [ib-re-actor.mapping :refer [map->]]
    [ib-re-actor.translation :refer [translate]])
   (:import
-   (com.ib.client EClientSocket)))
+   (com.ib.client EClientSocket EJavaSignal)))
 
 ;;;
 ;;; Connection and Server
@@ -33,7 +33,8 @@
    client-id identifies this client. Only one connection to a gateway can
    be made per client-id at a time."
   ([wr host port client-id]
-   (let [ecs (com.ib.client.EClientSocket. wr)]
+   (let [rdr (com.ib.client.EJavaSignal.)
+         ecs (com.ib.client.EClientSocket. wr rdr)]
      (.eConnect ecs host port client-id)
      ecs)))
 

@@ -11,7 +11,7 @@ date strings into clj-time dates, etc."
    [ib-re-actor.translation :refer [translate]])
   (:import
    (java.util Vector)
-   (com.ib.client Contract ComboLeg)))
+   (com.ib.client Contract ComboLeg Bar)))
 
 (defprotocol Mappable
   (->map [this]
@@ -243,3 +243,13 @@ create instances, we will only map from objects to clojure maps."
   [:realized-profit-loss m_realizedPNL]
   [:yield m_yield]
   [:yield-redemption-date m_yieldRedemptionDate :translate :yield-redemption-date])
+
+(defmapping-readonly com.ib.client.Bar
+  [:time m_time :translate :timestamp]
+  [:open m_open]
+  [:high m_high]
+  [:low  m_low]
+  [:close m_close]
+  [:volume m_volume]
+  [:trade-count m_count]
+  [:WAP m_wap])

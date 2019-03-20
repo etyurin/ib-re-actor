@@ -196,14 +196,15 @@
 
     ;;; Orders
     (orderStatus [this orderId status filled remaining avgFillPrice permId
-                  parentId lastFillPrice clientId whyHeld]
+                  parentId lastFillPrice clientId whyHeld mktCapPrice]
       (dispatch-message cb {:type :order-status :order-id orderId
                             :value {:status (translate :from-ib :order-status status)
                                     :filled filled :remaining remaining
                                     :average-fill-price avgFillPrice
                                     :permanent-id permId :parent-id parentId
                                     :last-fill-price lastFillPrice :client-id clientId
-                                    :why-held whyHeld}}))
+                                    :why-held whyHeld
+                                    :mkt-cap-price mktCapPrice}}))
 
     (openOrder [this orderId contract order orderState]
       (dispatch-message cb {:type :open-order :order-id orderId
@@ -315,7 +316,7 @@
                                     :side (translate :from-ib :market-depth-side side)
                                     :price price :size size}}))
 
-    (updateMktDepthL2 [this tickerId position marketMaker operation side price size]
+    (updateMktDepthL2 [this tickerId position marketMaker operation side price size isSmartDepth]
       (dispatch-message cb {:type :update-market-depth-level-2 :ticker-id tickerId
                             :value {:position position
                                     :market-maker marketMaker
@@ -323,7 +324,9 @@
                                                           :market-depth-row-operation
                                                           operation)
                                     :side (translate :from-ib :market-depth-side side)
-                                    :price price :size size}}))
+                                    :price price :size size
+                                    :is-smart-depth isSmartDepth
+                                    }}))
 
     ;;; News Bulletin
     (updateNewsBulletin [this msgId msgType message origExchange]
@@ -347,15 +350,12 @@
                             :value xml}))
 
     ;;; Historical Data
-    (historicalData [this requestId date open high low close volume count wap hasGaps]
-      (if (is-finish? date)
-        (dispatch-message cb {:type :price-bar-complete :request-id requestId})
+    (historicalDataEnd [this requestId startDateStr endDateStr]
+      (dispatch-message cb {:type :price-bar-complete :request-id requestId}))
+    (historicalData [this requestId bar]
         (dispatch-message cb
                           {:type :price-bar :request-id requestId
-                           :value {:time (translate :from-ib :timestamp date)
-                                   :open open :close close
-                                   :high high :low low  :volume volume
-                                   :trade-count count :WAP wap :has-gaps? hasGaps}})))
+                           :value (->map bar)}))
 
     ;;; Market Scanners
     (scannerParameters [this xml]
