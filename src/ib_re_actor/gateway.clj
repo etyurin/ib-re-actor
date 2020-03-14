@@ -245,30 +245,32 @@
   (cs/cancel-market-data (:ecs connection) ticker-id)
   (unsubscribe! connection ticker-id))
 
+
 (defn request-market-data-type [connection type]
   "WARNING: using non-real-time data seems to cause problems and client disconnects (due to TWS API < v963?)
   From TWS API documentation:
 
-      By default only real-time (1) market data is enabled.
-      Sending 1 (real-time) disables frozen, delayed and
+      By default only :real-time-streaming (1) market data is enabled.
+      Sending type = :real-time-streaming disables frozen, delayed and
       delayed-frozen market data.
-      Sending 2 (frozen) enables frozen market data.
-      Sending 3 (delayed) enables delayed and disables
+      Sending type = :frozen enables frozen market data.
+      Sending type = :delayed enables delayed and disables
       delayed-frozen market data.
-      Sending 4 (delayed-frozen) enables delayed and
+      Sending type = :delayed-frozen enables delayed and
       delayed-frozen market data."
-  (cs/request-market-data-type (:ecs connection) type)
+  (cs/request-market-data-type (:ecs connection) type))
 
-  (defn request-market-depth
-    "Returns the ticker-id that can be used to cancel the request."
-    ([connection contract rows handlers with-mm-info?]
-     (let [ticker-id (next-id connection)
-           info-type (if with-mm-info? :update-market-depth-level-2 :update-market-depth)]
-       (subscribe! connection ticker-id
-                   (multiple-messages-handler connection info-type ticker-id handlers))
-       (cs/request-market-depth (:ecs connection)
-                                ticker-id contract rows)
-       ticker-id))))
+
+(defn request-market-depth
+  "Returns the ticker-id that can be used to cancel the request."
+  ([connection contract rows handlers with-mm-info?]
+    (let [ticker-id (next-id connection)
+          info-type (if with-mm-info? :update-market-depth-level-2 :update-market-depth)]
+      (subscribe! connection ticker-id
+                  (multiple-messages-handler connection info-type ticker-id handlers))
+      (cs/request-market-depth (:ecs connection)
+                              ticker-id contract rows)
+      ticker-id))))
 
 
 (defn cancel-market-depth [connection ticker-id]
