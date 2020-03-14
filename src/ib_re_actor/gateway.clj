@@ -270,7 +270,7 @@
                   (multiple-messages-handler connection info-type ticker-id handlers))
       (cs/request-market-depth (:ecs connection)
                               ticker-id contract rows)
-      ticker-id))))
+      ticker-id)))
 
 
 (defn cancel-market-depth [connection ticker-id]
