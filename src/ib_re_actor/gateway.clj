@@ -249,13 +249,13 @@
   "WARNING: using non-real-time data seems to cause problems and client disconnects (due to TWS API < v963?)
   From TWS API documentation:
 
-      By default only real-time (1) market data is enabled.
-      Sending 1 (real-time) disables frozen, delayed and
+      By default only :real-time-streaming (1) market data is enabled.
+      Sending type = :real-time-streaming disables frozen, delayed and
       delayed-frozen market data.
-      Sending 2 (frozen) enables frozen market data.
-      Sending 3 (delayed) enables delayed and disables
+      Sending type = :frozen enables frozen market data.
+      Sending type = :delayed enables delayed and disables
       delayed-frozen market data.
-      Sending 4 (delayed-frozen) enables delayed and
+      Sending type = :delayed-frozen enables delayed and
       delayed-frozen market data."
   (cs/request-market-data-type (:ecs connection) type)
 
