@@ -57,9 +57,7 @@
   type should be one of :order :ticker :request
   "
   [connection]
-  (let [id @(:next-id connection)]
-    (swap! (:next-id connection) inc)
-    id))
+  (first (swap-vals! (:next-id connection) inc)))
 
 
 (defn error-printer
